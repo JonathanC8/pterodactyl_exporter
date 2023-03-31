@@ -11,7 +11,8 @@ srv = None
 
 def client_init(config_file: dict):
     global client
-    global headers
+    global applicationHeaders
+    global clientHeaders
     if config_file['https']:
         client = http.client.HTTPSConnection(config_file['host'], 443, check_hostname=not config_file['ignore_ssl'])
     else:
