@@ -26,7 +26,7 @@ def main(args=None):
 
     while True:
         try:
-            http_client.get_server(config["server_list_type"])
+            http_client.get_server()
             metrics = http_client.get_metrics()
             http_server.serve_metrics(metrics)
             time.sleep(10)

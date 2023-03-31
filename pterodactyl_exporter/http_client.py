@@ -22,7 +22,7 @@ def client_init(config_file: dict):
                "Accept": "Application/vnd.pterodactyl.v1+json"}
 
 
-def get_server(list_type):
+def get_server():
     global srv
     srv = {
         "name": [],
