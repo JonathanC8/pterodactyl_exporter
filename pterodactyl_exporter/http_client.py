@@ -4,7 +4,8 @@ import time
 import dateutil.parser
 
 client = None
-headers = None
+clientHeaders = None
+applicationHeaders = None
 srv = None
 
 
@@ -15,11 +16,13 @@ def client_init(config_file: dict):
         client = http.client.HTTPSConnection(config_file['host'], 443, check_hostname=not config_file['ignore_ssl'])
     else:
         client = http.client.HTTPConnection(config_file['host'], 80)
-    headers = {"Authorization": f"Bearer {config_file['api_key']}", "Content-Type": "application/json",
+    clientHeaders = {"Authorization": f"Bearer {config_file['client_api_key']}", "Content-Type": "application/json",
+               "Accept": "Application/vnd.pterodactyl.v1+json"}
+    applicationHeaders = {"Authorization": f"Bearer {config_file['application_api_key']}", "Content-Type": "application/json",
                "Accept": "Application/vnd.pterodactyl.v1+json"}
 
 
-def get_server(list_type="owner"):
+def get_server(list_type):
     global srv
     srv = {
         "name": [],
@@ -37,7 +40,7 @@ def get_server(list_type="owner"):
         "max_cpu": [],
         "last_backup_time": [],
     }
-    client.request("GET", "/api/client/?type={}".format(list_type), "", headers)
+    client.request("GET", "/api/application/servers", "", applicationHeaders)
     servers = json.loads(client.getresponse().read())
     if "errors" in servers:
         print(servers)
@@ -55,7 +58,7 @@ def get_server(list_type="owner"):
 
 def get_metrics():
     for x in srv["id"]:
-        client.request("GET", f"/api/client/servers/{x}/resources", "", headers)
+        client.request("GET", f"/api/client/servers/{x}/resources", "", clientHeaders)
         response = json.loads(client.getresponse().read())
         if "errors" in response:
             print(response)
@@ -74,7 +77,7 @@ def get_metrics():
     return srv
 
 def get_last_backup_time(x, page):
-    client.request("GET", f"/api/client/servers/{x}/backups?per_page=50&page={page}", "", headers)
+    client.request("GET", f"/api/client/servers/{x}/backups?per_page=50&page={page}", "", clientHeaders)
     response = json.loads(client.getresponse().read())
     if "errors" in response:
         print(response)

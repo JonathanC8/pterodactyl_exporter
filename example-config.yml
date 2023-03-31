@@ -1,0 +1,6 @@
+host: panel.example.com
+client_api_key: APIKEY_APIKEYAPIKEYAPIKEY
+application_api_key: APIKEY_APIKEYAPIKEYAPIKEY
+https: true
+ignore_ssl: false
+server_list_type: owner
